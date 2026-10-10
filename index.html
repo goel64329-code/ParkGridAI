@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParkGridAI | Smart Parking Network</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f8fc;color:#142039}
+nav{height:72px;background:white;display:flex;align-items:center;justify-content:space-between;padding:0 7%;gap:20px}
+.logo{font-size:22px;font-weight:900}.logo span{color:#0798df}
+nav a{color:#34435b;text-decoration:none;margin:0 12px;font-size:14px;font-weight:bold}
+button{cursor:pointer;border:0;font-weight:bold}
+.btn{background:#078bd0;color:white;border-radius:24px;padding:13px 22px}
+.hero{padding:75px 7% 95px;color:white;background:linear-gradient(100deg,#101827f5,#101827d9),url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=85') center/cover}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:45px;align-items:center;max-width:1250px;margin:auto}
+.tag{display:inline-block;padding:9px 14px;border:1px solid #ffffff45;border-radius:30px;color:#9ce1ff;font-size:12px;letter-spacing:1px;font-weight:bold}
+h1{font-size:clamp(40px,5vw,66px);line-height:1.06;letter-spacing:-2px;margin:27px 0}
+h1 span{color:#50cafa}
+.desc{font-size:18px;line-height:1.7;color:#c7d2e1;max-width:600px}
+.search{display:flex;background:white;padding:8px;border-radius:22px;margin-top:30px;max-width:680px;gap:8px}
+.search input{min-width:0;flex:1;border:0;outline:0;padding:12px;font-size:15px}
+.search button{background:#078bd0;color:white;border-radius:16px;padding:0 20px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chips button{background:#ffffff12;border:1px solid #ffffff35;color:white;padding:8px 12px;border-radius:22px}
+.radar{background:#303a47eF;border:1px solid #ffffff2b;padding:22px;border-radius:26px}
+.radar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.radar h3{font-size:15px;margin:0}
+.radar-head a{color:#67d4ff;font-size:13px}
+.event{display:flex;align-items:center;gap:12px;background:white;color:#172039;border-radius:18px;padding:13px;margin:11px 0}
+.event-icon{width:45px;height:45px;border-radius:14px;background:linear-gradient(135deg,#11182c,#126aa0,#f8a347);flex-shrink:0}
+.event-info{flex:1;min-width:0}
+.event-info b{font-size:13px;display:block}
+.event-info small{display:block;color:#7888a1;margin-top:5px;font-size:11px}
+.surge{font-size:11px;color:#e65b18;background:#fff4e9;padding:7px;border-radius:15px}
+.muted{color:#aebed0;font-size:12px}
+.categories{position:relative;margin:-42px auto 0;background:white;border:1px solid #e8edf4;border-radius:26px;max-width:1250px;padding:25px 15px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px;box-shadow:0 12px 30px #1720390d}
+.category{text-align:center;background:white;color:#35445e;padding:8px 3px;border-radius:15px}
+.category:hover{background:#eff8ff}
+.circle{display:grid;place-items:center;margin:0 auto 10px;width:50px;height:50px;border-radius:50%;font-size:26px;background:#edf6ff;color:#087ed0}
+.category:nth-child(1) .circle{background:#fff6e5;color:#d96b00}
+.category:nth-child(3) .circle{background:#eef0ff;color:#3855ef}
+.category:nth-child(4) .circle{background:#fff0e7;color:#e65a22}
+.category:nth-child(5) .circle{background:#e8fbf2;color:#098a61}
+main section.content{max-width:1250px;margin:65px auto;padding:0 0}
+.kicker{color:#078bd0;font-size:11px;letter-spacing:1.5px;font-weight:bold}
+.heading{display:flex;align-items:end;justify-content:space-between;gap:15px}
+.heading h2{font-size:30px;margin:8px 0 22px}
+#count{font-size:13px;color:#7888a0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:white;border:1px solid #e6ebf2;border-radius:20px;overflow:hidden;box-shadow:0 6px 24px #15254108}
+.photo{height:145px;background:linear-gradient(135deg,#b7d1d9,#738a9a,#243c50);display:grid;place-items:center;font-size:48px}
+.card-body{padding:18px}
+.card h3{font-size:17px;margin:0 0 8px}
+.card p{color:#77869b;font-size:13px;margin:6px 0}
+.features{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
+.features span{font-size:10px;background:#f1f5f9;padding:7px;border-radius:8px}
+.price-row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #edf0f4;padding-top:15px;margin-top:14px}
+.price{font-weight:900;font-size:20px}.price small{font-size:11px;color:#7b8ba0;font-weight:normal}
+.book{background:#078bd0;color:white;padding:11px 14px;border-radius:11px}
+.host{max-width:1250px;margin:0 auto 60px;background:#e9f6fc;padding:32px;border-radius:22px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.host h2{margin:8px 0}.host p{color:#65758b}
+footer{background:#101827;color:#c5d0df;padding:30px 7%;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#101827;color:white;padding:15px 20px;border-radius:12px;display:none;z-index:10;max-width:90%;font-size:14px}
+@media(max-width:850px){
+ nav{padding:0 5%;height:65px}nav a{display:none}
+ .hero{padding:45px 5% 75px}.hero-grid{grid-template-columns:1fr;gap:30px}
+ .categories{margin:-35px 4% 0;grid-template-columns:repeat(3,1fr)}
+ main section.content{margin:45px 5%}
+ .grid{grid-template-columns:repeat(2,1fr)}
+ .host{margin:0 5% 40px;flex-wrap:wrap}
+}
+@media(max-width:520px){
+ .hero h1{font-size:42px}.desc{font-size:15px}
+ .search{gap:4px}.search input{font-size:12px;padding:8px}
+ .search button{padding:0 12px;font-size:12px}
+ .radar{padding:14px}.event{gap:8px;padding:10px}
+ .event-info b{font-size:11px}.event-info small{font-size:10px}
+ .surge{font-size:10px;padding:5px}
+ .grid{grid-template-columns:1fr}
+ .heading{align-items:start;flex-direction:column;gap:0}
+ .heading h2{margin-bottom:18px}
+ .host{padding:23px}
+ footer{padding:25px 5%}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">◉ ParkGrid<span>AI</span></div>
+  <div>
+    <a href="#find">Find parking</a>
+    <a href="#events">Event parking</a>
+    <a href="#host">Become a host</a>
+  </div>
+  <button class="btn" onclick="notify('Sign-in is a demo feature.')">Sign in</button>
+</nav>
+
+<header class="hero">
+<div class="hero-grid">
+<div>
+  <span class="tag">✧ AI-POWERED PARKING MARKETPLACE</span>
+  <h1>Park in a verified<br>driveway, <span>not a traffic jam.</span></h1>
+  <p class="desc">Book private parking spaces near you in seconds. Prices adapt to live demand, peak hours and match-day crowds — so you always know the fair rate.</p>
+  <form class="search" id="searchForm">
+    <input id="area" placeholder="⌖  Where do you need parking? e.g. Indiranagar">
+    <button type="submit">⌕ Find spots</button>
+  </form>
+  <div class="chips">
+    <button onclick="searchArea('Indiranagar')">Indiranagar</button>
+    <button onclick="searchArea('Koramangala')">Koramangala</button>
+    <button onclick="searchArea('MG Road')">MG Road</button>
+    <button onclick="searchArea('Whitefield')">Whitefield</button>
+    <button onclick="searchArea('HSR Layout')">HSR Layout</button>
+    <button onclick="searchArea('Jayanagar')">Jayanagar</button>
+  </div>
+</div>
+
+<aside class="radar" id="events">
+  <div class="radar-head"><h3>🟠 Live event surge radar</h3><a href="#find">View all</a></div>
+  <div class="event"><div class="event-icon"></div><div class="event-info"><b>RCB vs CSK — IPL Night Match</b><small>M. Chinnaswamy Stadium · Sat, 10 Oct, 8:30 am</small></div><span class="surge">×1.8</span></div>
+  <div class="event"><div class="event-icon"></div><div class="event-info"><b>Sunburn Arena ft. Martin Garrix</b><small>Palace Grounds · Mon, 12 Oct, 6:00 pm</small></div><span class="surge">×1.6</span></div>
+  <div class="event"><div class="event-icon"></div><div class="event-info"><b>Bengaluru Tech Summit</b><small>MG Road Convention Hall · Wed, 14 Oct, 9:00 am</small></div><span class="surge">×1.4</span></div>
+  <p class="muted">Pre-book a driveway near the venue before surge peaks.</p>
+</aside>
+</div>
+</header>
+
+<div class="categories">
+  <button class="category" onclick="filterType('Private driveway')"><span class="circle">⌂</span>Private driveway</button>
+  <button class="category" onclick="filterType('Covered basement')"><span class="circle">☂</span>Covered basement</button>
+  <button class="category" onclick="filterType('EV charging')"><span class="circle">ϟ</span>EV charging</button>
+  <button class="category" onclick="filterType('Event parking')"><span class="circle">♨</span>Event parking</button>
+  <button class="category" onclick="filterType('Office lots')"><span class="circle">▤</span>Office lots</button>
+  <button class="category" onclick="filterType('Carports')"><span class="circle">⌁</span>Carports</button>
+</div>
+
+<main>
+<section class="content" id="find">
+  <div class="heading"><div><p class="kicker">PARKING NEAR YOU</p><h2>Popular Parking Spots</h2></div><span id="count">6 demo spaces</span></div>
+  <div class="grid" id="spots"></div>
+</section>
+<section class="host" id="host">
+  <div><p class="kicker">EARN WITH YOUR SPACE</p><h2>Turn your driveway into income.</h2><p>Share unused parking space with nearby drivers.</p></div>
+  <button class="btn" onclick="notify('Host registration is a demo feature.')">Become a host →</button>
+</section>
+</main>
+<footer><b>◉ ParkGrid<span style="color:#49c7f4">AI</span></b><span>Smarter parking. Less circling.</span><span>© 2026 ParkGridAI · Demo project</span></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const spaces=[
+{id:1,name:"Spacious Driveway",area:"Indiranagar",type:"Private driveway",price:40,icon:"🏡",rating:"4.8",distance:"0.8 km",covered:false,ev:false},
+{id:2,name:"Covered Basement",area:"Koramangala",type:"Covered basement",price:60,icon:"🚘",rating:"4.6",distance:"1.2 km",covered:true,ev:false},
+{id:3,name:"EV Charging Spot",area:"Whitefield",type:"EV charging",price:80,icon:"⚡",rating:"4.9",distance:"2.5 km",covered:true,ev:true},
+{id:4,name:"Office Parking",area:"HSR Layout",type:"Office lots",price:50,icon:"🏢",rating:"4.5",distance:"3.1 km",covered:true,ev:false},
+{id:5,name:"Event Day Parking",area:"MG Road",type:"Event parking",price:70,icon:"🎟️",rating:"4.7",distance:"0.5 km",covered:false,ev:false},
+{id:6,name:"Private Carport",area:"Jayanagar",type:"Carports",price:35,icon:"🚗",rating:"4.6",distance:"1.4 km",covered:true,ev:false}
+];
+let activeType="";
+function render(list){
+ document.getElementById("count").textContent=list.length+" demo space"+(list.length===1?"":"s");
+ const root=document.getElementById("spots");
+ if(!list.length){root.innerHTML='<p>No demo spaces found. Try another area.</p>';return}
+ root.innerHTML=list.map(s=>`
+ <article class="card">
+ <div class="photo">${s.icon}</div>
+ <div class="card-body">
+ <h3>${s.name}</h3><p>⌖ ${s.area} · ${s.distance}</p>
+ <div class="features"><span>${s.covered?"✓ Covered":"Open air"}</span><span>${s.ev?"⚡ EV charging":"Standard parking"}</span><span>✓ Demo listing</span></div>
+ <div class="price-row"><div class="price">₹${s.price}<small> / hr</small><p>⭐ ${s.rating} · sample rating</p></div><button class="book" onclick="book(${s.id})">Book now</button></div>
+ </div></article>`).join("");
+}
+function searchArea(area){
+ document.getElementById("area").value=area;
+ activeType="";
+ const q=area.trim().toLowerCase();
+ render(spaces.filter(s=>s.area.toLowerCase().includes(q)||s.name.toLowerCase().includes(q)));
+ document.getElementById("find").scrollIntoView({behavior:"smooth"});
+}
+document.getElementById("searchForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const q=document.getElementById("area").value.trim().toLowerCase();
+ activeType="";
+ render(spaces.filter(s=>!q||s.area.toLowerCase().includes(q)||s.name.toLowerCase().includes(q)));
+ document.getElementById("find").scrollIntoView({behavior:"smooth"});
+});
+function filterType(type){
+ activeType=type;
+ render(spaces.filter(s=>s.type===type));
+ document.getElementById("find").scrollIntoView({behavior:"smooth"});
+}
+function book(id){
+ const s=spaces.find(x=>x.id===id);
+ const answer=prompt("How many hours do you need? Enter 1 to 24.","2");
+ if(answer===null)return;
+ const hours=Number(answer);
+ if(!Number.isInteger(hours)||hours<1||hours>24){notify("Enter a whole number between 1 and 24.");return}
+ notify("Demo booking confirmed for "+s.name+". Estimated total: ₹"+(s.price*hours)+". No payment taken.");
+}
+function notify(message){
+ const t=document.getElementById("toast");
+ t.textContent=message;t.style.display="block";
+ clearTimeout(window.toastTimer);
+ window.toastTimer=setTimeout(()=>t.style.display="none",3500);
+}
+render(spaces);
+</script>
+</body>
+</html>
